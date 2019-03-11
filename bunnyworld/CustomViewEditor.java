@@ -69,6 +69,7 @@ public class CustomViewEditor extends View {
         shapesOnPossession = Editor.getShapesOnPos();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Editor.noSelect();
                 pressDownTime = System.currentTimeMillis();
                 x1 = event.getX();
                 y1 = event.getY();
@@ -124,8 +125,6 @@ public class CustomViewEditor extends View {
                     }
                     find = false;
                     moved = false;
-                } else {
-                    Editor.noSelect();
                 }
         }
         invalidate();
