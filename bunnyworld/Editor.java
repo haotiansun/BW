@@ -10,6 +10,7 @@ public class Editor {
     static Inventory possession;
     static Page curPage;
     static Page startingPage;
+    static Shape cutShape;
     static Shape copyShape;
     static String gameName;
 
@@ -20,6 +21,35 @@ public class Editor {
         curPage = new Page("page1");
         startingPage = curPage;
         pages.add(curPage);
+        Shape bunny1 = new Shape(200, 1000, 100,100);
+        bunny1.setName("bunny1");
+        bunny1.setImageName("death");
+        Shape bunny2 = new Shape(400, 1000,100,100);
+        bunny2.setName("bunny2");
+        bunny2.setImageName("mystic");
+        Shape carrot1 = new Shape(600, 1000, 100,100);
+        carrot1.setName("carrot1");
+        carrot1.setImageName("carrot");
+        Shape carrot2 = new Shape(800, 1000, 100,100);
+        carrot2.setName("carrot2");
+        carrot2.setImageName("carrot2");
+        Shape trap = new Shape(1000, 1000, 100,100);
+        trap.setName("trap");
+        trap.setImageName("fire");
+        Shape duck = new Shape(1200, 1000, 100,100);
+        duck.setName("duck");
+        duck.setImageName("duck");
+        Shape rect = new Shape(1400, 1000, 100,100);
+        Shape text = new Shape(1600, 1000, 100,100);
+        text.setText("Text");
+        possession.addShape(bunny1);
+        possession.addShape(bunny2);
+        possession.addShape(carrot1);
+        possession.addShape(carrot2);
+        possession.addShape(trap);
+        possession.addShape(duck);
+        possession.addShape(rect);
+        possession.addShape(text);
     }
 
     static Page findPage(String name){
@@ -88,8 +118,12 @@ public class Editor {
         }
     }
 
+    static ArrayList<Page> getPages(){
+        return pages;
+    }
+
     static void deletePage(String name) {
-        if (name.equals("page1")){
+        if (name.equals(startingPage.getName())){
             System.out.println("Can not delete starting page.");
             return;
         }
@@ -150,11 +184,25 @@ public class Editor {
         curPage.selectedShape = null;
     }
 
+    public static void cutShape(){
+        curPage.removeShape(curPage.selectedShape);
+        cutShape = curPage.selectedShape;
+        curPage.selectedShape = null;
+        copyShape = null;
+    }
+
     public static void copyShape(){
-         copyShape = curPage.selectedShape;
+         copyShape = new Shape(curPage.selectedShape);
     }
 
     public static void pasteShape(){
+        if (cutShape!=null){
+            curPage.addShape(cutShape);
+            cutShape.setX(100);
+            cutShape.setY(100);
+            curPage.selectedShape = cutShape;
+            cutShape = null;
+        }
         if (copyShape!=null) {
             curPage.addShape(copyShape);
             copyShape.setX(100);
@@ -183,8 +231,8 @@ public class Editor {
         }
         for (Shape s:possession.getShapes()) {
             if (s.equals(shape)) {
-                possession.removeShape(s);
-                curPage.addShape(shape);
+                Shape s = new Shape(shape);
+                curPage.addShape(s);
                 return;
             }
         }
