@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         db = openOrCreateDatabase("GamesDB", MODE_PRIVATE, null);
         initDB();
@@ -30,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     }
     protected void initDB() {
         Cursor tablesCursor = db.rawQuery(
-                "SELECT * FROM sqlite_master WHERE type='table' AND name='gameList';", null);
-        //Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ "gameList" +"'", null);
-        if (tableCursor.getCount() == 0) {
+                "SELECT * FROM sqlite_master WHERE type='table' AND name='games';", null);
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ "gameList" +"'", null);
+        if (cursor == null) {
             String setupStr = "CREATE TABLE gameList ("
                     + "game TEXT, startPage TEXT, _id INTEGER PRIMARY KEY AUTOINCREMENT);";
             db.execSQL(setupStr);

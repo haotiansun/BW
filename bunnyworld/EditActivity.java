@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -48,7 +49,8 @@ public class EditActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         /*
         String[] shapeArray = {"Script", "Create Script", "Set Property", "Edit Text",
                 "Copy Shape", "Paste Shape", "Delete Shape",};
@@ -96,6 +98,9 @@ public class EditActivity extends AppCompatActivity{
         //ArrayList<Shape> newShapes = new ArrayList<Shape>();
         //Editor.loadGame(newShapes);
         //Editor.loadGame();
+        setTitle(R.string.app_name);
+        setTitle(Editor.curPage.getName());
+        setContentView(R.layout.activity_edit);
     }
 
     public void scriptMenuPop(View view) {
@@ -576,6 +581,8 @@ public void pageMenuPop(View view) {
 
                                 Editor.gotoPage(arrayAdapter.getItem(whichPage));
                                 dialog.cancel();
+                                setTitle(Editor.curPage.getName());
+                                setContentView(R.layout.activity_edit);
                             }
 
                         });
