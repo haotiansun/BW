@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
     }
     protected void initDB() {
         Cursor tablesCursor = db.rawQuery(
-                "SELECT * FROM sqlite_master WHERE type='table' AND name='games';", null);
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ "gameList" +"'", null);
-        if (cursor == null) {
+                "SELECT * FROM sqlite_master WHERE type='table' AND name='gameList';", null);
+        //Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ "gameList" +"'", null);
+        if (tableCursor.getCount() == 0) {
             String setupStr = "CREATE TABLE gameList ("
                     + "game TEXT, startPage TEXT, _id INTEGER PRIMARY KEY AUTOINCREMENT);";
             db.execSQL(setupStr);
