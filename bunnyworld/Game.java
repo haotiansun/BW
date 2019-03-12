@@ -1,4 +1,5 @@
 package com.example.bunnyworld;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.*;
@@ -7,6 +8,9 @@ public class Game {
 	static ArrayList<Page> pages;
 	static Inventory possession;
 	static Page curPage;
+	static Page startingPage;
+	static SQLiteDatabase db;
+	static String gameName = "default";
 	
 	public static void main() {
 
@@ -97,7 +101,41 @@ public class Game {
 		Page5.addShape(text6);
 
 	}
-	
+
+	static Page findPage(String name){
+		for (Page page:pages) {
+			if (page.getName().equals(name)) {
+				return page;
+			}
+		}
+		return null;
+	}
+
+	static void loadGame(SQLiteDatabase db, String gName){
+		//for (Page page:pages){
+		//    pages.remove(page);
+		//}
+		gameName = gName;
+		possession = new Inventory();
+		pages = new ArrayList<Page>();
+		ArrayList<Shape> shapes = Database.getGameShapes(db, gameName);
+
+		curPage = new Page(Database.getStartPage(db, gameName));
+		startingPage = curPage;
+		pages.add(curPage);
+		for (Shape shape:shapes){
+			//String pageName = shape.getShapeName();
+			String pageName = shape.getPageName();
+			Page page = findPage(pageName);
+			if (page == null) {
+				page = new Page(pageName);
+				pages.add(page);
+			}
+			page.addShape(shape);
+		}
+	}
+
+
 	static void gotoPage(String name) {
 		for (Page page:pages) {
 			if (page.getName().equals(name)) {

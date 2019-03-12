@@ -88,7 +88,7 @@ public class Shape {
 	private Paint grayFillPaint;
 	private Paint blueOutlinePaint;
 	private Paint textPaint;
-	private static Context context;
+	static Context context;
 	
 	public Shape(float x, float y, float width, float height) {
 		this.x = x;
@@ -107,7 +107,7 @@ public class Shape {
 		textSize = DEFAULT_TEXTSIZE;
 		undoType = "";
 		
-		movable = false; movableBackup();
+		movable = true; movableBackup();
 		visible = true; visibleBackup();
 		useImageBounds = false; useImageBoundsBackup();
 
@@ -138,19 +138,21 @@ public class Shape {
 
 		shapeNum++;
 		// Check if the shape name has already been used. If yes, use default shape name
-		if (checkShapeName(sName)) {
+		/*if (checkShapeName(sName)) {
 			name = sName;
 		} else {
 			name = "shape" + shapeNum;
-		}
+		}*/
+        name = sName;
 		nameBackup();
 
 		// Check if the associated page exists in the game. If not, page name becomes empty string
-		if (checkPageName(pName)) {
+		/*if (checkPageName(pName)) {
 			pageName = pName;
 		} else {
 			pageName = "";
-		}
+		}*/
+		pageName = pName;
 		pageNameBackup();
 
 		script = new Script(scr); scriptBackup();
@@ -204,7 +206,7 @@ public class Shape {
 		blueOutlinePaint = new Paint();
 		blueOutlinePaint.setColor(Color.BLUE);
 		blueOutlinePaint.setStyle(Paint.Style.STROKE);
-		blueOutlinePaint.setStrokeWidth(20.0f);
+		blueOutlinePaint.setStrokeWidth(5.0f);
 
 		textPaint = new Paint();
 		textPaint.setColor(Color.BLACK);
@@ -238,7 +240,7 @@ public class Shape {
 		blueOutlinePaint = new Paint();
 		blueOutlinePaint.setColor(Color.BLUE);
 		blueOutlinePaint.setStyle(Paint.Style.STROKE);
-		blueOutlinePaint.setStrokeWidth(20.0f);
+		blueOutlinePaint.setStrokeWidth(5.0f);
 
 		textPaint = new Paint();
 		textPaint.setColor(Color.BLACK);
@@ -317,18 +319,18 @@ public class Shape {
 		movableBackup();
 		undoType = UNDO_MOVABLE;
 		this.movable = movable;
-		if (!visible) {
-			this.movable = false;
-		}
+//		if (!visible) {
+//			this.movable = false;
+//		}
 	}
 	
 	public void setVisible(boolean visible) {
 		visibleBackup();
 		undoType = UNDO_VISIBLE;
 		this.visible = visible;
-		if (!visible) {
-			this.movable = false;
-		}
+//		if (!visible) {
+//			this.movable = false;
+//		}
 	}
 	
 	public void setUseImageBounds(boolean bool) {
@@ -384,6 +386,10 @@ public class Shape {
 		return text;
 	}
 
+	public float getTextSize() {
+		return textSize;
+	}
+
 	//-------------------Used for data saving-------------------------
 	public int getMov() {
 		if (movable) {
@@ -419,7 +425,13 @@ public class Shape {
 	}
 
 	//-------------------------------Shape Related Functions--------------------------------------------------
-	// Draw thenselves
+	public void drawOutline(Canvas canvas) {
+        canvas.drawRect(x - width/2, y - height/2, x + width/2, y + height/2, blueOutlinePaint);
+    }
+
+
+
+    // Draw thenselves
 	// Need to be tested in Android
 	public void draw(Canvas canvas, Shape shape) {
 		BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable,fireDrawable, mysticDrawable;
@@ -626,16 +638,16 @@ public class Shape {
 
 	//-------------------------------Error Check--------------------------------------------------
 	// Check if page exists in the game
-	public boolean checkPageName(String pageName) {
+	/*public boolean checkPageName(String pageName) {
 		for (Page p: Game.pages) {
 			if (p.getName().equals(pageName)) {
 				return true;
 			}
 		}
 		return false;
-	}
+	}*/
 
-	// Check if shape name already exists in the game
+	/*// Check if shape name already exists in the game
 	public boolean checkShapeName(String shapeName) {
 		for (Page p: Game.pages) {
 			for (Shape s: p.getshapes()) {
@@ -645,7 +657,7 @@ public class Shape {
 			}
 		}
 		return true;
-	}
+	}*/
 
 	// Check if image name relates to an actual image
 	public boolean checkImageName(String imageName) {

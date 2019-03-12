@@ -37,6 +37,7 @@ public class EditActivity extends AppCompatActivity{
     private int whichScript;
     private String scriptContent;
     private int whichPage;
+    private int whichShape;
     //Editor newEditor = new Editor();
     private ArrayList<String> triggers = new ArrayList<String>();
     private ArrayList<String> scripts = new ArrayList<String>();
@@ -178,23 +179,36 @@ public class EditActivity extends AppCompatActivity{
                                         scriptContent += " " + scripts.get(whichScript);
                                         System.out.println(which);
                                         if (whichScript == 0) {
-
+                                            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditActivity.this, android.R.layout.select_dialog_singlechoice);
+                                            final ArrayList<Page> pages = Editor.getPages();
+                                            for (Page temp : pages) {
+                                                arrayAdapter.add(temp.getName());
+                                            }
+                                            //arrayAdapter.add("Create a new game");
                                             AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
-                                            builder.setTitle("Enter the name of the page you want to transfer to: ");
-
-                                            final EditText editText = new EditText(EditActivity.this);
-                                            builder.setView(editText);
-
-                                            builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                                            builder.setTitle("Choose a page");
+                                            builder.setCancelable(true);
+                                            int checkedItem = 0; //this will checked the item when user open the dialog
+                                            builder.setSingleChoiceItems(arrayAdapter, checkedItem, new DialogInterface.OnClickListener() {
+                                                @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    scriptContent += " " + editText.getText().toString() + "; ";
+                                                    Toast.makeText(EditActivity.this, "Position: " + which + " Value: " + arrayAdapter.getItem(which), Toast.LENGTH_LONG).show();
+                                                    whichPage = which;
+                                                }
+                                            });
+
+                                            builder.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //dialog.cancel();
+                                                    dialog.dismiss();
+                                                    scriptContent += " " + arrayAdapter.getItem(whichPage) + "; ";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
                                                         clickedShape.setScript(scriptContent);
-                                                        scriptContent="";
+                                                        scriptContent = "";
                                                     }
-
                                                     dialog.cancel();
                                                 }
                                             });
@@ -206,6 +220,7 @@ public class EditActivity extends AppCompatActivity{
                                             });
 
                                             builder.show();
+
                                         }
                                         // play sound
                                         if (whichScript == 1) {
@@ -256,7 +271,7 @@ public class EditActivity extends AppCompatActivity{
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //dialog.cancel();
-                                                    scriptContent += " " + sounds.get(whichSound);
+                                                    scriptContent += " " + sounds.get(whichSound) + "; ";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -281,18 +296,96 @@ public class EditActivity extends AppCompatActivity{
                                         // hide & show
 
                                         if (whichScript == 2) {
-                                            Shape clickedShape = Editor.getSelectedShape();
-                                            if (clickedShape != null) {
-                                                clickedShape.setVisible(false);
-                                                clickedShape.setMovable(false);
+                                            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditActivity.this, android.R.layout.select_dialog_singlechoice);
+                                            final ArrayList<Page> pages = Editor.getPages();
+                                            for (Page temp : pages) {
+                                                for (Shape tempShape : temp.getshapes()) {
+                                                    arrayAdapter.add("Page: " + temp.getName() + ", Shape: " + tempShape.getName());
+                                                }
                                             }
 
+                                            //arrayAdapter.add("Create a new game");
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
+                                            builder.setTitle("Choose a shape");
+                                            builder.setCancelable(true);
+                                            int checkedItem = 0; //this will checked the item when user open the dialog
+                                            builder.setSingleChoiceItems(arrayAdapter, checkedItem, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Toast.makeText(EditActivity.this, "Position: " + which + " Value: " + arrayAdapter.getItem(which), Toast.LENGTH_LONG).show();
+                                                    whichPage = which;
+                                                }
+                                            });
+
+                                            builder.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //dialog.cancel();
+                                                    dialog.dismiss();
+                                                    scriptContent += " " + arrayAdapter.getItem(whichShape) + "; ";
+                                                    // need a function to get the current clicked shape
+                                                    Shape clickedShape = Editor.getSelectedShape();
+                                                    if (clickedShape != null) {
+                                                        clickedShape.setScript(scriptContent);
+                                                        scriptContent = "";
+                                                    }
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    scriptContent="";
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                                            builder.show();
+
                                         } else {
-                                            Shape clickedShape = Editor.getSelectedShape();
-                                            if (clickedShape != null) {
-                                                clickedShape.setVisible(true);
-                                                clickedShape.setMovable(true);
+                                            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditActivity.this, android.R.layout.select_dialog_singlechoice);
+                                            final ArrayList<Page> pages = Editor.getPages();
+                                            for (Page temp : pages) {
+                                                for (Shape tempShape : temp.getshapes()) {
+                                                    arrayAdapter.add("Page: " + temp.getName() + ", Shape: " + tempShape.getName());
+                                                }
                                             }
+
+                                            //arrayAdapter.add("Create a new game");
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
+                                            builder.setTitle("Choose a shape");
+                                            builder.setCancelable(true);
+                                            int checkedItem = 0; //this will checked the item when user open the dialog
+                                            builder.setSingleChoiceItems(arrayAdapter, checkedItem, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Toast.makeText(EditActivity.this, "Position: " + which + " Value: " + arrayAdapter.getItem(which), Toast.LENGTH_LONG).show();
+                                                    whichPage = which;
+                                                }
+                                            });
+
+                                            builder.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //dialog.cancel();
+                                                    dialog.dismiss();
+                                                    scriptContent += " " + arrayAdapter.getItem(whichShape) + "; ";
+                                                    // need a function to get the current clicked shape
+                                                    Shape clickedShape = Editor.getSelectedShape();
+                                                    if (clickedShape != null) {
+                                                        clickedShape.setScript(scriptContent);
+                                                        scriptContent = "";
+                                                    }
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    scriptContent="";
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                                            builder.show();
 
 
                                         }
@@ -411,14 +504,24 @@ public class EditActivity extends AppCompatActivity{
                         LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
                         View dialogView = inflater.inflate(R.layout.properties, null);
                         builder.setView(dialogView);
+                        Shape selectedShape = Editor.getSelectedShape();
+                        final EditText editTextX = dialogView.findViewById(R.id.editX);
+                        editTextX.setText(Float.toString(selectedShape.getX()));
+//                        builder.setView(editTextX);
+                        Log.d("debug1", editTextX.getText().toString());
+                        final EditText editTextY = dialogView.findViewById(R.id.editY);
+                        editTextY.setText(Float.toString(selectedShape.getY()));
 
-                        final EditText editTextX = findViewById(R.id.editX);
-                        final EditText editTextY = findViewById(R.id.editY);
-                        final EditText editTextWidth = findViewById(R.id.editWidth);
-                        final EditText editTextHeight = findViewById(R.id.editHeight);
-                        final Switch moveSwitch = findViewById(R.id.movable);
-                        final Switch hideSwitch = findViewById(R.id.visible);
+                        final EditText editTextWidth = dialogView.findViewById(R.id.editWidth);
+                        editTextWidth.setText(Float.toString(selectedShape.getWidth()));
 
+                        final EditText editTextHeight = dialogView.findViewById(R.id.editHeight);
+                        editTextHeight.setText(Float.toString(selectedShape.getHeight()));
+
+                        final Switch moveSwitch = dialogView.findViewById(R.id.movable);
+                        final Switch hideSwitch = dialogView.findViewById(R.id.visible);
+
+                        final EditText editTextName = dialogView.findViewById(R.id.currentShape);
 //set the current state of a Switch
 
                         builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
@@ -432,7 +535,9 @@ public class EditActivity extends AppCompatActivity{
                                 selectedShape.setWidth(Float.parseFloat(editTextWidth.getText().toString()));
                                 selectedShape.setHeight(Float.parseFloat(editTextHeight.getText().toString()));
                                 selectedShape.setMovable(moveSwitch.isChecked());
+                                Log.d("debug1", Boolean.toString(moveSwitch.isChecked()));
                                 selectedShape.setVisible(hideSwitch.isChecked());
+                                selectedShape.setName(editTextName.getText().toString());
 
 
 
@@ -623,7 +728,8 @@ public void pageMenuPop(View view) {
                         AlertDialog dialogTransfer = builder.create();
                         dialogTransfer.show();
                         return true;
-
+                    case R.id.setPage:
+                        Editor.startingPage = Editor.curPage;
                     default:
                         return false;
                 }
