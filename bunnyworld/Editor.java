@@ -135,13 +135,6 @@ public class Editor {
         return true
     }
 
-    static void setStartingPage(String name){
-        Page page = findPage(name);
-        if (page!=null){
-            startingPage = page;
-        }
-    }
-
     static void setPageName(String name, String newName){
         Page page = findPage(name);
         page.setName(newName);
