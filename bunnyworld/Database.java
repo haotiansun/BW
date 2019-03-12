@@ -64,4 +64,11 @@ public class Database {
             }
         }
     }
+
+    protected static void deleteGame(SQLiteDatabase db, String name) {
+        if (getGames(db).contains(name)) {
+            db.execSQL("DELETE FROM gameList WHERE game = '" + name + "';");
+            db.execSQL("DROP TABLE IF EXISTS " + name + ";");
+        }
+    }
 }
