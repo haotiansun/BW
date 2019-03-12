@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public class EditActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Shape.context = this;
+
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE, null);
+
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         /*
@@ -182,7 +187,7 @@ public class EditActivity extends AppCompatActivity{
 
                                             builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    scriptContent += " " + editText.getText().toString();
+                                                    scriptContent += " " + editText.getText().toString() + "; ";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -363,6 +368,7 @@ public class EditActivity extends AppCompatActivity{
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
                 switch (item.getItemId()) {
                     case R.id.itemSet:
                         /*
@@ -406,15 +412,34 @@ public class EditActivity extends AppCompatActivity{
                         View dialogView = inflater.inflate(R.layout.properties, null);
                         builder.setView(dialogView);
 
-                        final EditText editTextLeft = findViewById(R.id.editLeft);
+                        final EditText editTextX = findViewById(R.id.editX);
+                        final EditText editTextY = findViewById(R.id.editY);
+                        final EditText editTextWidth = findViewById(R.id.editWidth);
+                        final EditText editTextHeight = findViewById(R.id.editHeight);
+                        final Switch moveSwitch = findViewById(R.id.movable);
+                        final Switch hideSwitch = findViewById(R.id.visible);
+
+//set the current state of a Switch
+
                         builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //dialog.cancel();
 
+                                Shape selectedShape = Editor.getSelectedShape();
+                                selectedShape.setX(Float.parseFloat(editTextX.getText().toString()));
+                                selectedShape.setY(Float.parseFloat(editTextY.getText().toString()));
+                                selectedShape.setWidth(Float.parseFloat(editTextWidth.getText().toString()));
+                                selectedShape.setHeight(Float.parseFloat(editTextHeight.getText().toString()));
+                                selectedShape.setMovable(moveSwitch.isChecked());
+                                selectedShape.setVisible(hideSwitch.isChecked());
+
+
+
                                 // 需要一个namelist of pages
                                 //newEditor.gotoPage(editTextLeft.toString());
                                 dialog.cancel();
+                                setContentView(R.layout.activity_edit);
                             }
 
                         });
@@ -428,16 +453,22 @@ public class EditActivity extends AppCompatActivity{
 
                         return true;
                     case R.id.itemDelete:
+                        Shape clickedShape = Editor.getSelectedShape();
+                        //clickedShape = Editor.getSelectedShape();
+                        Editor.noSelect();
+                        Editor.curPage.removeShape(clickedShape);
+                        setContentView(R.layout.activity_edit);
                         return true;
 
                     case R.id.itemPaste:
                         return true;
                     case R.id.itemText:
-                        final Shape clickedShape = Editor.getSelectedShape();
-                        if (clickedShape.getType() == 3) {
+                        final Shape clickedShapeText = Editor.getSelectedShape();
+                        //clickedShapeText = Editor.getSelectedShape();
+                        if (clickedShapeText.getType() == 3) {
 
                             AlertDialog.Builder builderText = new AlertDialog.Builder(EditActivity.this);
-                            builderText.setTitle("Enter the name of the page you want to delete: ");
+                            builderText.setTitle("Enter the name of the text: ");
 
                             final EditText newEditText = new EditText(EditActivity.this);
                             builderText.setView(newEditText);
@@ -447,8 +478,9 @@ public class EditActivity extends AppCompatActivity{
                                 public void onClick(DialogInterface dialog, int which) {
                                     //dialog.cancel();
 
-                                    clickedShape.setText(newEditText.getText().toString());
+                                    clickedShapeText.setText(newEditText.getText().toString());
                                     dialog.cancel();
+                                    setContentView(R.layout.activity_edit);
                                 }
 
                             });
@@ -551,17 +583,15 @@ public void pageMenuPop(View view) {
                     case R.id.transferPage:
                         builder.setTitle("Choose the page you want to transfer to: ");
 
-                        final EditText editText = new EditText(EditActivity.this);
-                        builder.setView(editText);
+
                         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditActivity.this, android.R.layout.select_dialog_singlechoice);
-                        ArrayList<String> pages;
-                        arrayAdapter.add("goto");
+                        ArrayList<Page> pages = Editor.getPages();
+                        for (Page tempPage : pages) {
+                            arrayAdapter.add(tempPage.getName())
+;                        }
 
-                        arrayAdapter.add("play");
-                        arrayAdapter.add("hide");
-                        arrayAdapter.add("show");
 
-                        final int checkedItem = 0;
+                        final int checkedItem = pages.indexOf(Editor.curPage);
                         builder.setSingleChoiceItems(arrayAdapter, checkedItem, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -578,11 +608,13 @@ public void pageMenuPop(View view) {
 
                                 // 需要一个namelist of pages
                                 dialog.dismiss();
-
+                                Log.d("debug1", Editor.curPage.getName());
+                                Log.d("debug1", arrayAdapter.getItem(whichPage));
                                 Editor.gotoPage(arrayAdapter.getItem(whichPage));
-                                dialog.cancel();
                                 setTitle(Editor.curPage.getName());
                                 setContentView(R.layout.activity_edit);
+                                dialog.cancel();
+
                             }
 
                         });
@@ -598,7 +630,7 @@ public void pageMenuPop(View view) {
             }
         });
 
-        popup.inflate(R.menu.popup_menu_shape);
+        popup.inflate(R.menu.popup_menu_page);
         popup.show();
     }
 
@@ -700,8 +732,31 @@ public void pageMenuPop(View view) {
     }
 */
     public void saveGame(View view) {
+
         db = openOrCreateDatabase("GamesDB", MODE_PRIVATE, null);
-        Editor.saveGame(db);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Save the game");
+
+        final EditText editText = new EditText(this);
+        builder.setView(editText);
+
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Editor.saveGame(db);
+                dialog.cancel();
+                Toast.makeText(EditActivity.this, Editor.gameName + " is saved!", Toast.LENGTH_LONG).show();
+            }
+
+        });
+        builder.setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 }
