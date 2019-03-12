@@ -71,4 +71,10 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS " + name + ";");
         }
     }
+
+    protected static void emptyDB(SQLiteDatabase db) {
+        for (String str : getGames(db)) {
+            deleteGame(db, str);
+        }
+    }
 }
