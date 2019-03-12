@@ -168,6 +168,9 @@ public class Editor {
     static void setPageName(String name, String newName){
         Page page = findPage(name);
         page.setName(newName);
+        for (Shape s:page.getshapes()){
+            s.setPageName(newName);
+        }
     }
 
 
