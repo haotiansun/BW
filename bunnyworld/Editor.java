@@ -109,7 +109,7 @@ public class Editor {
         possession.addShape(duck);
         possession.addShape(rect);
         possession.addShape(text);
-
+        pages = new ArrayList<Page>();
         ArrayList<Shape> shapes = Database.getGameShapes(db, gName);
 
         curPage = new Page(Database.getStartPage(db, gName));
