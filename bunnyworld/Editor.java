@@ -122,10 +122,9 @@ public class Editor {
         return pages;
     }
 
-    static void deletePage(String name) {
+    static boolean deletePage(String name) {
         if (name.equals(startingPage.getName())){
-            System.out.println("Can not delete starting page.");
-            return;
+            return false;
         }
         Page page = findPage(name);
         if (page.equals(curPage)){
@@ -133,6 +132,7 @@ public class Editor {
             gotoPage(curPage.getName());
         }
         pages.remove(page);
+        return true
     }
 
     static void setStartingPage(String name){
