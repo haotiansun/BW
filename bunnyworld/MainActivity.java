@@ -32,43 +32,50 @@ public class MainActivity extends AppCompatActivity {
     }
     protected void initDB() {
         Cursor tablesCursor = db.rawQuery(
-                "SELECT * FROM sqlite_master WHERE type='table' AND name='games';", null);
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ "gameList" +"'", null);
-        if (cursor == null) {
+                "SELECT * FROM sqlite_master WHERE type='table' AND name='gameList';", null);
+        if (tablesCursor.getCount() == 0) { // ... then we need to setup the table }
             String setupStr = "CREATE TABLE gameList ("
                     + "game TEXT, startPage TEXT, _id INTEGER PRIMARY KEY AUTOINCREMENT);";
             db.execSQL(setupStr);
         }
-
     }
+
 
 
     public void playGame(View view) {
 
-        /*
-
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("Game 1");
-
-        arrayAdapter.add("Game 2");
+        final ArrayList<String> gameNames = Database.getGames(db);
+        for (String temp : gameNames) {
+            arrayAdapter.add(temp);
+        }
+        //arrayAdapter.add("Create a new game");
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Choose a game");
+        builder.setTitle("Choose a game to play");
         builder.setCancelable(true);
         int checkedItem = 0; //this will checked the item when user open the dialog
         builder.setSingleChoiceItems(arrayAdapter, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(MainActivity.this, "Position: " + which + " Value: " + arrayAdapter.getItem(which), Toast.LENGTH_LONG).show();
+                whichGame = which;
             }
         });
 
-        builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //dialog.cancel();
                 dialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+
+
+
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                String strName = arrayAdapter.getItem(whichGame);
+                intent.putExtra("STRING_I_NEED", strName);
                 startActivity(intent);
+
+
 
             }
 
@@ -81,10 +88,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.show();
-
-        */
-        Intent intent = new Intent(MainActivity.this, PlayActivity.class);
-        startActivity(intent);
     }
 
     public void editGame(View view) {
@@ -130,18 +133,24 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //dialog.cancel();
-                            if (gameNames.contains(editText.getText().toString())) {
+                            if (gameNames.contains(editText.getText().toString()) || editText.getText().toString().equals("gameList")) {
                                 new  AlertDialog.Builder(MainActivity.this)
                                         .setTitle("Warning" )
                                         .setMessage("The game name has already existed" )
                                         .setPositiveButton("OK" ,  null )
                                         .show();
                             } else {
-                                Editor.saveGame(db);
+                                Editor.setGameName(editText.getText().toString());
+                                //Editor.saveGame(db);
+                                dialog.cancel();
+                                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                                String strName = arrayAdapter.getItem(whichGame);
+                                intent.putExtra("STRING_I_NEED", strName);
+                                startActivity(intent);
                             }
                             // Editor.setGameName
 
-                            dialog.cancel();
+
                         }
 
                     });
@@ -149,11 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
                     AlertDialog dialogNew = builder.create();
                     dialogNew.show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                    String strName = arrayAdapter.getItem(whichGame);
+                    intent.putExtra("STRING_I_NEED", strName);
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
-                String strName = arrayAdapter.getItem(whichGame);
-                intent.putExtra("STRING_I_NEED", strName);
-                startActivity(intent);
+
 
             }
 
