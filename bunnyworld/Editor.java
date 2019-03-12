@@ -128,6 +128,10 @@ public class Editor {
             return;
         }
         Page page = findPage(name);
+        if (page.equals(curPage)){
+            curPage = startingPage;
+            gotoPage(curPage.getName());
+        }
         pages.remove(page);
     }
 
