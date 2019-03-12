@@ -76,13 +76,42 @@ public class Editor {
         Database.saveGame(db, gameName, startingPage.getName(), pages);
     }
 
-    static void loadGame(SQLiteDatabase db, String gameName){
-        for (Page page:pages){
-            pages.remove(page);
-        }
-        ArrayList<Shape> shapes = Database.getGameShapes(db, gameName);
+    static void loadGame(SQLiteDatabase db, String gName){
+        gameName = gName;
+        possession = new Inventory();
+        Shape bunny1 = new Shape(200, 1000, 100,100);
+        bunny1.setName("bunny1");
+        bunny1.setImageName("death");
+        Shape bunny2 = new Shape(400, 1000,100,100);
+        bunny2.setName("bunny2");
+        bunny2.setImageName("mystic");
+        Shape carrot1 = new Shape(600, 1000, 100,100);
+        carrot1.setName("carrot1");
+        carrot1.setImageName("carrot");
+        Shape carrot2 = new Shape(800, 1000, 100,100);
+        carrot2.setName("carrot2");
+        carrot2.setImageName("carrot2");
+        Shape trap = new Shape(1000, 1000, 100,100);
+        trap.setName("trap");
+        trap.setImageName("fire");
+        Shape duck = new Shape(1200, 1000, 100,100);
+        duck.setName("duck");
+        duck.setImageName("duck");
+        Shape rect = new Shape(1400, 1000, 100,100);
+        Shape text = new Shape(1600, 1000, 100,100);
+        text.setText("Text");
+        possession.addShape(bunny1);
+        possession.addShape(bunny2);
+        possession.addShape(carrot1);
+        possession.addShape(carrot2);
+        possession.addShape(trap);
+        possession.addShape(duck);
+        possession.addShape(rect);
+        possession.addShape(text);
 
-        curPage = new Page(Database.getStartPage(db, gameName));
+        ArrayList<Shape> shapes = Database.getGameShapes(db, gName);
+
+        curPage = new Page(Database.getStartPage(db, gName));
         startingPage = curPage;
         pages.add(curPage);
         for (Shape shape:shapes){
@@ -170,26 +199,26 @@ public class Editor {
     }
 
     public static void select(Shape shape){
-        curPage.selectedShape = shape;
+        selectedShape = shape;
     }
 
     public static Shape getSelectedShape() {
-        return curPage.selectedShape;
+        return selectedShape;
     }
 
     public static void noSelect(){
-        curPage.selectedShape = null;
+        selectedShape = null;
     }
 
     public static void cutShape(){
-        curPage.removeShape(curPage.selectedShape);
-        cutShape = curPage.selectedShape;
-        curPage.selectedShape = null;
+        curPage.removeShape(selectedShape);
+        cutShape = selectedShape;
+        selectedShape = null;
         copyShape = null;
     }
 
     public static void copyShape(){
-         copyShape = new Shape(curPage.selectedShape);
+         copyShape = new Shape(selectedShape);
     }
 
     public static void pasteShape(){
@@ -197,7 +226,7 @@ public class Editor {
             curPage.addShape(cutShape);
             cutShape.setX(100);
             cutShape.setY(100);
-            curPage.selectedShape = cutShape;
+            selectedShape = cutShape;
             cutShape = null;
         }
         if (copyShape!=null) {
@@ -219,36 +248,7 @@ public class Editor {
     }
 
     static void moveToCurPage(Shape shape) {
-        for (Shape s:curPage.getshapes()) {
-            if (s.equals(shape)) {
-                curPage.removeShape(s);
-                curPage.addShape(shape);
-                return;
-            }
-        }
-        for (Shape s:possession.getShapes()) {
-            if (s.equals(shape)) {
-                Shape s = new Shape(shape);
-                curPage.addShape(s);
-                return;
-            }
-        }
-    }
-
-    static void moveToPos(Shape shape) {
-        for (Shape s:curPage.getshapes()) {
-            if (s.equals(shape)) {
-                curPage.removeShape(s);
-                possession.addShape(shape);
-                return;
-            }
-        }
-        for (Shape s:possession.getShapes()) {
-            if (s.equals(shape)) {
-                possession.removeShape(s);
-                possession.addShape(shape);
-                return;
-            }
-        }
+        curPage.addShape(shape);
+        shape.setPageName(curPage.getName());
     }
 }
