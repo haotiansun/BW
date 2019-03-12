@@ -12,6 +12,7 @@ public class Editor {
     static Page startingPage;
     static Shape cutShape;
     static Shape copyShape;
+    static Shape selectedShape = null;
     static String gameName;
 
 
