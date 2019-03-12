@@ -5,7 +5,6 @@ public class Page {
 	private String name;
 	private ArrayList<Shape> shapes;
 	//static
-	Shape selectedShape;
 	
 
 	Page(String name){

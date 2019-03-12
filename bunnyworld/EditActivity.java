@@ -202,7 +202,7 @@ public class EditActivity extends AppCompatActivity{
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //dialog.cancel();
                                                     dialog.dismiss();
-                                                    scriptContent += " " + arrayAdapter.getItem(whichPage) + "; ";
+                                                    scriptContent += " " + arrayAdapter.getItem(whichPage) + ";";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -271,7 +271,7 @@ public class EditActivity extends AppCompatActivity{
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //dialog.cancel();
-                                                    scriptContent += " " + sounds.get(whichSound) + "; ";
+                                                    scriptContent += " " + sounds.get(whichSound) + ";";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -298,9 +298,11 @@ public class EditActivity extends AppCompatActivity{
                                         if (whichScript == 2) {
                                             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditActivity.this, android.R.layout.select_dialog_singlechoice);
                                             final ArrayList<Page> pages = Editor.getPages();
+                                            final ArrayList<String> shapeList = new ArrayList<String>();
                                             for (Page temp : pages) {
                                                 for (Shape tempShape : temp.getshapes()) {
                                                     arrayAdapter.add("Page: " + temp.getName() + ", Shape: " + tempShape.getName());
+                                                    shapeList.add(tempShape.getName());
                                                 }
                                             }
 
@@ -322,7 +324,7 @@ public class EditActivity extends AppCompatActivity{
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //dialog.cancel();
                                                     dialog.dismiss();
-                                                    scriptContent += " " + arrayAdapter.getItem(whichShape) + "; ";
+                                                    scriptContent += " " + shapeList.get(whichShape) + ";";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -368,7 +370,7 @@ public class EditActivity extends AppCompatActivity{
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //dialog.cancel();
                                                     dialog.dismiss();
-                                                    scriptContent += " " + arrayAdapter.getItem(whichShape) + "; ";
+                                                    scriptContent += " " + arrayAdapter.getItem(whichShape) + ";";
                                                     // need a function to get the current clicked shape
                                                     Shape clickedShape = Editor.getSelectedShape();
                                                     if (clickedShape != null) {
@@ -842,11 +844,7 @@ public void pageMenuPop(View view) {
         db = openOrCreateDatabase("GamesDB", MODE_PRIVATE, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Save the game");
-
-        final EditText editText = new EditText(this);
-        builder.setView(editText);
-
+        builder.setTitle("Save the game ?");
 
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override

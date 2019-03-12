@@ -451,22 +451,22 @@ public class Shape {
 					if (!useImageBounds) {
 						if (imageName.equals("carrot")) {
 							carrotDrawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.carrot);
-							canvas.drawBitmap(carrotDrawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(carrotDrawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						} else if (imageName.equals("carrot2")) {
 							carrot2Drawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.carrot2);
-							canvas.drawBitmap(carrot2Drawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(carrot2Drawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						} else if (imageName.equals("death")) {
 							deathDrawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.death);
-							canvas.drawBitmap(deathDrawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(deathDrawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						} else if (imageName.equals("duck")) {
 							duckDrawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.duck);
-							canvas.drawBitmap(duckDrawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(duckDrawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						} else if (imageName.equals("fire")) {
 							fireDrawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.fire);
-							canvas.drawBitmap(fireDrawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(fireDrawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						} else if (imageName.equals("mystic")) {
 							mysticDrawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.mystic);
-							canvas.drawBitmap(mysticDrawable.getBitmap(), null, new RectF(x - height/2, y - height/2, x + height/2, y + height/2), null);
+							canvas.drawBitmap(mysticDrawable.getBitmap(), null, new RectF(x - width/2, y - height/2, x + width/2, y + height/2), null);
 						}
 					} else {
 						// Use default size of the image regardless of the input width and height

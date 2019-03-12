@@ -162,7 +162,7 @@ public class Editor {
             gotoPage(curPage.getName());
         }
         pages.remove(page);
-        return true
+        return true;
     }
 
     static void setPageName(String name, String newName){

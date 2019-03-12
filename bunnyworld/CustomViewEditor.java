@@ -11,6 +11,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.example.bunnyworld.Editor.selectedShape;
+
 public class CustomViewEditor extends View {
 
     ArrayList<Shape> shapesOnCurrentPage, shapesOnPossession;
@@ -37,6 +39,10 @@ public class CustomViewEditor extends View {
         shapesOnCurrentPage = Editor.getShapesOnCurPage();
         for (int i = 0; i < shapesOnCurrentPage.size(); i++) {
             shapesOnCurrentPage.get(i).draw(canvas, null);
+        }
+
+        if (selectedShape != null) {
+            selectedShape.drawOutline(canvas);
         }
 
         shapesOnPossession = Editor.getShapesOnPos();
@@ -87,7 +93,7 @@ public class CustomViewEditor extends View {
                 } else {
                     for (int i = shapesOnPossession.size() - 1; i >= 0; i--) {
                         if (shapesOnPossession.get(i).contains(x1, y1)) {
-                            curShape = shapesOnPossession.get(i);
+                            curShape = new Shape (shapesOnPossession.get(i));
                             x0 = curShape.getX();
                             y0 = curShape.getY();
                             find = true;
@@ -114,18 +120,13 @@ public class CustomViewEditor extends View {
                     if (onPage && pressUpTime - pressDownTime <= MAX_CLICK_DURATION
                             && Math.abs(x3 - x1) <= MAX_CLICK_DISTANCE && Math.abs(y3 - y1) <= MAX_CLICK_DISTANCE) {
                         Editor.select(curShape);
-                    } else if (moved) {
-                        if (curShape.getY() <= DIVISION * viewHeight) {
+                    } else if (moved && !onPage && curShape.getY() <= DIVISION * viewHeight) {
                             curShape.limitTopHeight((float)DIVISION * viewHeight);
                             Editor.moveToCurPage(curShape);
-                        } else {
-                            curShape.limitBottomHeight((float)DIVISION * viewHeight);
-                            Editor.moveToPos(curShape);
                         }
                     }
                     find = false;
                     moved = false;
-                }
         }
         invalidate();
         return true;

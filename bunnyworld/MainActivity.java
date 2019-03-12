@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<String> gameNames = Database.getGames(db);
         for (String temp : gameNames) {
             arrayAdapter.add(temp);
+//            Database.deleteGame(db, temp);
         }
         //arrayAdapter.add("Create a new game");
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                Intent intent = new Intent(MainActivity.this, PlayActivity.class);
                 String strName = arrayAdapter.getItem(whichGame);
                 intent.putExtra("STRING_I_NEED", strName);
                 startActivity(intent);
